@@ -1,0 +1,1815 @@
+http://www.youtube.com/watch?v=SyD4p8_y8Kw&feature=player_embedded
+J=100000#
+nu=.0001											#speciation rate#
+theta=2*J*nu#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+	vals=SAM[-which(SAM==0)]#
+	SAM=matrix(vals,ncol=1)#
+	maxSAM=apply(SAM,2,max)#
+		#Checks#
+		sorted=sort(SAM,decreasing=TRUE)#
+		rank=c(1:length(SAM))#
+		SAM=matrix(sorted,ncol=1)#
+		print(SAM)#
+			print("Max of SAM:")#
+		print(maxSAM)#
+		print("Number of species:")#
+		print(length(SAM))#
+		print("Number of individuals:")#
+		print(sum(SAM[,1]))	#
+		print('Theta=')#
+		print(theta)#
+		print("time=")#
+		print(time)#
+		#Plots#
+		par(mfrow=c(2,1))#
+		plot(rank,log10(as.vector(SAM)),main="Rank-abundance")#
+		bins=seq(1:maxSAM,by=1)#
+		hist(SAM,breaks=bins,main="Species abundance distribution")
+J=64#
+nu=.08											#speciation rate#
+theta=2*J*nu#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+	vals=SAM[-which(SAM==0)]#
+	SAM=matrix(vals,ncol=1)#
+	maxSAM=apply(SAM,2,max)#
+		#Checks#
+		sorted=sort(SAM,decreasing=TRUE)#
+		rank=c(1:length(SAM))#
+		SAM=matrix(sorted,ncol=1)#
+		print(SAM)#
+			print("Max of SAM:")#
+		print(maxSAM)#
+		print("Number of species:")#
+		print(length(SAM))#
+		print("Number of individuals:")#
+		print(sum(SAM[,1]))	#
+		print('Theta=')#
+		print(theta)#
+		print("time=")#
+		print(time)#
+		#Plots#
+		par(mfrow=c(2,1))#
+		plot(rank,log10(as.vector(SAM)),main="Rank-abundance")#
+		bins=seq(1:maxSAM,by=1)#
+		hist(SAM,breaks=bins,main="Species abundance distribution")
+J=10000#
+N0L=1000#
+nu=.0001#
+#
+d=.1#
+m=.1#
+theta=2*J*nu#
+#
+#Functions#
+cummat<-function(mtrx){#
+	apply(mtrx,2,cumsum)#
+}#
+#
+evenness.shannon <- function(mtrx)				#pass it relative abundance vector/matrix#
+{#
+	if (min(mtrx) < 0 || sum(mtrx) <= 0)#
+		return(NA)#
+	H=0	#
+	for(i in 1:length(mtrx)){#
+		h=-mtrx[i,1]*log(mtrx[i,1])#
+		H=H+h#
+	}#
+	print(H)#
+	E=H/log(length(mtrx))#
+	return(E)#
+}	#
+#Metacommunity coalescence (to achieve initial distribution)#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+#
+vals=SAM[-which(SAM==0)]#
+ordered=sort(vals,decreasing=TRUE)#
+SAM=matrix(ordered,ncol=1)#
+print(SAM)#
+print(sum(SAM[,1]))#
+print(theta)#
+#
+#Rank-abundance plot (Metacommunity)#
+par(mfrow=c(4,2))#
+rank=c(1:length(SAM))#
+plot(rank,log10(as.vector(100*(SAM/J))),main="Metacommunity rank-abundance")#
+#
+#Abundance plot (Metacommunity)#
+maxSAM=apply(SAM,2,max)#
+print(length(SAM))#
+bins=seq(0,maxSAM,by=1)#
+hist(SAM,breaks=bins,main="Metacommunity Species Abundance")#
+#Local Community#
+#
+numtrials=3#
+timesteps=10000							#
+for(k in 1:numtrials) {						#
+	smet=length(SAM)#
+	N0L=1000#
+	sloc=10#
+	SAL=matrix(nrow=sloc, ncol=1)#
+	for(i in 1:sloc){#
+		SAL[i,1]=(1/sloc)*N0L#
+		}#
+	print(SAL)#
+	cummet=apply(SAM/J,2,cumsum)#
+	for (t in 1:timesteps) {					#birth/replacement events#
+		#LOCAL COMMUNITY#
+		breakflag<-FALSE															#
+		r1=runif(1)	#
+		cumloc=apply(SAL/N0L, 2, cumsum)				#
+		for(j in 1:sloc){			#
+			if(r1<cumloc[j,1]){					#determine which species loses an individual in the local community#
+				SAL[j,1]=SAL[j,1]-1#
+				breakflag<-TRUE#
+			}#
+			if(SAL[j,1]==0){					#if local pop drops to 0 for species j, remove species j from local RSA array#
+				dummat=SAL[-j,]#
+				SAL=matrix(dummat,ncol=1)#
+				k=SAM[j,1]						#remove species j from first sloc species in metacomm. RSA array (tracking species)#
+				dummat2=SAM[-j,]#
+				SAM=matrix(dummat2,ncol=1)#
+				SAM=rbind(SAM,k)				#
+				sloc=sloc-1						#rescale local community diversity#
+			}#
+			if (breakflag) {break}#
+		}#
+		breakflag<-FALSE#
+		r2=runif(1)#
+		r3=runif(1)								#Draw rand. to determine migration or not#
+		if (r3<m){								#if new individual is migrating from metacommunity#
+			r4=runif(1)#
+			if(r4<cummet[sloc,1]){				#decide which species#
+				for(i in 1:sloc){#
+					if(r4<cummet[i,1]){			#Species that is already in local community, but individual is migrating#
+						SAL[i,1]=SAL[i,1]+1#
+						breakflag<-TRUE#
+						}#
+					if (breakflag) break#
+				}#
+			}	#
+			else if (r4>cummet[sloc,1]){#
+				for(i in sloc+1:smet){#
+					if(r4<cummet[i,1]){			#
+						SAL=rbind(SAL,1)		#Appending a species not already in local community#
+						dummy=SAM[i,1]			#Takes the metacommunity species selected, switches it to match up with the local species matrix (tracking species)#
+						SAM[i,1]=SAM[sloc+1]#
+						SAM[sloc+1,1]=dummy#
+						sloc=sloc+1#
+						breakflag<-TRUE#
+					}#
+					if (breakflag) break#
+				}#
+			}#
+		}	#
+		else if (r3>m){							#if new individual is from local community (replacement not migrating)#
+			for(i in 1:sloc){#
+				if(r2<cumloc[i,1]){#
+					SAL[i,1]=SAL[i,1]+1#
+					breakflag<-TRUE#
+				}#
+				if (breakflag) {break}#
+			}#
+		}#
+#		print(cumsum)#
+	}	#timesteps#
+	#Rank-abundance plot (Local)#
+	valsL=sort(SAL,decreasing=TRUE)#
+	SAL=matrix(valsL,ncol=1)#
+	rankL=c(1:length(SAL))#
+	plot(rankL,log10(as.vector(100*(SAL/N0L))),main='Local rank-abundance')#
+	#Species abundance plot (local)#
+	maxSAL=apply(SAL,2,max)#
+	binsL=seq(0,maxSAL,by=1)#
+	hist(SAL,breaks=binsL,main="Species Abundance Local")#
+	print(SAL)#
+	print(sum(SAL[,1]))#
+	print(sloc)	#
+}
+J=10000#
+N0L=1000#
+nu=.001#
+#
+m=.1#
+theta=2*J*nu#
+#
+#Functions#
+cummat<-function(mtrx){#
+	apply(mtrx,2,cumsum)#
+}#
+#
+evenness.shannon <- function(mtrx)				#pass it relative abundance vector/matrix#
+{#
+	if (min(mtrx) < 0 || sum(mtrx) <= 0)#
+		return(NA)#
+	H=0	#
+	for(i in 1:length(mtrx)){#
+		h=-mtrx[i,1]*log(mtrx[i,1])#
+		H=H+h#
+	}#
+	print(H)#
+	E=H/log(length(mtrx))#
+	return(E)#
+}	#
+#Metacommunity coalescence (to achieve initial distribution)#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+#
+vals=SAM[-which(SAM==0)]#
+ordered=sort(vals,decreasing=TRUE)#
+SAM=matrix(ordered,ncol=1)#
+print(SAM)#
+print(sum(SAM[,1]))#
+print(theta)#
+#
+#Rank-abundance plot (Metacommunity)#
+par(mfrow=c(4,2))#
+rank=c(1:length(SAM))#
+plot(rank,log10(as.vector(100*(SAM/J))),main="Metacommunity rank-abundance")#
+#
+#Abundance plot (Metacommunity)#
+maxSAM=apply(SAM,2,max)#
+print(length(SAM))#
+bins=seq(0,maxSAM,by=1)#
+hist(SAM,breaks=bins,main="Metacommunity Species Abundance")#
+#Local Community#
+#
+numtrials=3#
+timesteps=10000							#
+for(k in 1:numtrials) {						#
+	smet=length(SAM)#
+	N0L=1000#
+	sloc=10#
+	SAL=matrix(nrow=sloc, ncol=1)#
+	for(i in 1:sloc){#
+		SAL[i,1]=(1/sloc)*N0L#
+		}#
+	print(SAL)#
+	cummet=apply(SAM/J,2,cumsum)#
+	for (t in 1:timesteps) {					#birth/replacement events#
+		#LOCAL COMMUNITY#
+		breakflag<-FALSE															#
+		r1=runif(1)	#
+		cumloc=apply(SAL/N0L, 2, cumsum)				#
+		for(j in 1:sloc){			#
+			if(r1<cumloc[j,1]){					#determine which species loses an individual in the local community#
+				SAL[j,1]=SAL[j,1]-1#
+				breakflag<-TRUE#
+			}#
+			if(SAL[j,1]==0){					#if local pop drops to 0 for species j, remove species j from local RSA array#
+				dummat=SAL[-j,]#
+				SAL=matrix(dummat,ncol=1)#
+				k=SAM[j,1]						#remove species j from first sloc species in metacomm. RSA array (tracking species)#
+				dummat2=SAM[-j,]#
+				SAM=matrix(dummat2,ncol=1)#
+				SAM=rbind(SAM,k)				#
+				sloc=sloc-1						#rescale local community diversity#
+			}#
+			if (breakflag) {break}#
+		}#
+		breakflag<-FALSE#
+		r2=runif(1)#
+		r3=runif(1)								#Draw rand. to determine migration or not#
+		if (r3<m){								#if new individual is migrating from metacommunity#
+			r4=runif(1)#
+			if(r4<cummet[sloc,1]){				#decide which species#
+				for(i in 1:sloc){#
+					if(r4<cummet[i,1]){			#Species that is already in local community, but individual is migrating#
+						SAL[i,1]=SAL[i,1]+1#
+						breakflag<-TRUE#
+						}#
+					if (breakflag) break#
+				}#
+			}	#
+			else if (r4>cummet[sloc,1]){#
+				for(i in sloc+1:smet){#
+					if(r4<cummet[i,1]){			#
+						SAL=rbind(SAL,1)		#Appending a species not already in local community#
+						dummy=SAM[i,1]			#Takes the metacommunity species selected, switches it to match up with the local species matrix (tracking species)#
+						SAM[i,1]=SAM[sloc+1]#
+						SAM[sloc+1,1]=dummy#
+						sloc=sloc+1#
+						breakflag<-TRUE#
+					}#
+					if (breakflag) break#
+				}#
+			}#
+		}	#
+		else if (r3>m){							#if new individual is from local community (replacement not migrating)#
+			for(i in 1:sloc){#
+				if(r2<cumloc[i,1]){#
+					SAL[i,1]=SAL[i,1]+1#
+					breakflag<-TRUE#
+				}#
+				if (breakflag) {break}#
+			}#
+		}#
+#		print(cumsum)#
+	}	#timesteps#
+	#Rank-abundance plot (Local)#
+	valsL=sort(SAL,decreasing=TRUE)#
+	SAL=matrix(valsL,ncol=1)#
+	rankL=c(1:length(SAL))#
+	plot(rankL,log10(as.vector(100*(SAL/N0L))),main='Local rank-abundance')#
+	#Species abundance plot (local)#
+	maxSAL=apply(SAL,2,max)#
+	binsL=seq(0,maxSAL,by=1)#
+	hist(SAL,breaks=binsL,main="Species Abundance Local")#
+	print(SAL)#
+	print(sum(SAL[,1]))#
+	print(sloc)	#
+}
+analyticalCheck<-function(J,nu){#
+	theta=J*nu#
+	expAb=matrix(nrow=J,ncol=1)#
+	for(i in 1:J){#
+		Smn=exp(log(theta/i)+lgamma(J+1)-lgamma(J+1-n)+lgamma(J+theta-n)-lgamma(J+theta))#
+		expAb[i,1]=Smn#
+		}#
+	print(expAb)#
+	}#
+analyticalCheck(1000,.001)
+analyticalCheck<-function(J,nu){#
+	theta=J*nu#
+	spec=J#
+	expAb=matrix(nrow=spec,ncol=1)#
+	for(i in 1:spec){#
+		Smn=exp(log(theta/i)+lgamma(J+1)-lgamma(J+1-n)+lgamma(J+theta-n)-lgamma(J+theta))#
+		expAb[i,1]=Smn#
+		}#
+	print(expAb)#
+	}
+analyticalCheck(1000,.001)
+J=10000#
+N0L=1000#
+nu=.001#
+#
+m=1#
+theta=2*J*nu#
+#
+#Functions#
+cummat<-function(mtrx){#
+	apply(mtrx,2,cumsum)#
+}#
+#
+evenness.shannon <- function(mtrx)				#pass it relative abundance vector/matrix#
+{#
+	if (min(mtrx) < 0 || sum(mtrx) <= 0)#
+		return(NA)#
+	H=0	#
+	for(i in 1:length(mtrx)){#
+		h=-mtrx[i,1]*log(mtrx[i,1])#
+		H=H+h#
+	}#
+	print(H)#
+	E=H/log(length(mtrx))#
+	return(E)#
+}	#
+#Metacommunity coalescence (to achieve initial distribution)#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+#
+vals=SAM[-which(SAM==0)]#
+ordered=sort(vals,decreasing=TRUE)#
+SAM=matrix(ordered,ncol=1)#
+print(SAM)#
+print(sum(SAM[,1]))#
+print(theta)#
+#
+#Rank-abundance plot (Metacommunity)#
+par(mfrow=c(4,2))#
+rank=c(1:length(SAM))#
+plot(rank,log10(as.vector(100*(SAM/J))),main="Metacommunity rank-abundance")#
+#
+#Abundance plot (Metacommunity)#
+maxSAM=apply(SAM,2,max)#
+print(length(SAM))#
+bins=seq(0,maxSAM,by=1)#
+hist(SAM,breaks=bins,main="Metacommunity Species Abundance")#
+#Local Community#
+#
+numtrials=3#
+timesteps=10000							#
+for(k in 1:numtrials) {						#
+	smet=length(SAM)#
+	N0L=1000#
+	sloc=10#
+	SAL=matrix(nrow=sloc, ncol=1)#
+	for(i in 1:sloc){#
+		SAL[i,1]=(1/sloc)*N0L#
+		}#
+	print(SAL)#
+	cummet=apply(SAM/J,2,cumsum)#
+	for (t in 1:timesteps) {					#birth/replacement events#
+		#LOCAL COMMUNITY#
+		breakflag<-FALSE															#
+		r1=runif(1)	#
+		cumloc=apply(SAL/N0L, 2, cumsum)				#
+		for(j in 1:sloc){			#
+			if(r1<cumloc[j,1]){					#determine which species loses an individual in the local community#
+				SAL[j,1]=SAL[j,1]-1#
+				breakflag<-TRUE#
+			}#
+			if(SAL[j,1]==0){					#if local pop drops to 0 for species j, remove species j from local RSA array#
+				dummat=SAL[-j,]#
+				SAL=matrix(dummat,ncol=1)#
+				k=SAM[j,1]						#remove species j from first sloc species in metacomm. RSA array (tracking species)#
+				dummat2=SAM[-j,]#
+				SAM=matrix(dummat2,ncol=1)#
+				SAM=rbind(SAM,k)				#
+				sloc=sloc-1						#rescale local community diversity#
+			}#
+			if (breakflag) {break}#
+		}#
+		breakflag<-FALSE#
+		r2=runif(1)#
+		r3=runif(1)								#Draw rand. to determine migration or not#
+		if (r3<m){								#if new individual is migrating from metacommunity#
+			r4=runif(1)#
+			if(r4<cummet[sloc,1]){				#decide which species#
+				for(i in 1:sloc){#
+					if(r4<cummet[i,1]){			#Species that is already in local community, but individual is migrating#
+						SAL[i,1]=SAL[i,1]+1#
+						breakflag<-TRUE#
+						}#
+					if (breakflag) break#
+				}#
+			}	#
+			else if (r4>cummet[sloc,1]){#
+				for(i in sloc+1:smet){#
+					if(r4<cummet[i,1]){			#
+						SAL=rbind(SAL,1)		#Appending a species not already in local community#
+						dummy=SAM[i,1]			#Takes the metacommunity species selected, switches it to match up with the local species matrix (tracking species)#
+						SAM[i,1]=SAM[sloc+1]#
+						SAM[sloc+1,1]=dummy#
+						sloc=sloc+1#
+						breakflag<-TRUE#
+					}#
+					if (breakflag) break#
+				}#
+			}#
+		}	#
+		else if (r3>m){							#if new individual is from local community (replacement not migrating)#
+			for(i in 1:sloc){#
+				if(r2<cumloc[i,1]){#
+					SAL[i,1]=SAL[i,1]+1#
+					breakflag<-TRUE#
+				}#
+				if (breakflag) {break}#
+			}#
+		}#
+#		print(cumsum)#
+	}	#timesteps#
+	#Rank-abundance plot (Local)#
+	valsL=sort(SAL,decreasing=TRUE)#
+	SAL=matrix(valsL,ncol=1)#
+	rankL=c(1:length(SAL))#
+	plot(rankL,log10(as.vector(100*(SAL/N0L))),main='Local rank-abundance')#
+	#Species abundance plot (local)#
+	maxSAL=apply(SAL,2,max)#
+	binsL=seq(0,maxSAL,by=1)#
+	hist(SAL,breaks=binsL,main="Species Abundance Local")#
+	print(SAL)#
+	print(sum(SAL[,1]))#
+	print(sloc)	#
+}
+J=100000#
+nu=.0005											#speciation rate#
+theta=2*J*nu#
+	SAM=matrix(nrow=J,ncol=1)#
+	SAM[,1]=0#
+	Patches=matrix(nrow=J,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<J-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<nu){#
+			uniqSp=uniqSp+1#
+			SAM[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>nu){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			}#
+	}#
+	SAM[uniqSp+1,1]=J-sum(SAM[,1])#
+	vals=SAM[-which(SAM==0)]#
+	SAM=matrix(vals,ncol=1)#
+	maxSAM=apply(SAM,2,max)#
+		#Checks#
+		sorted=sort(SAM,decreasing=TRUE)#
+		rank=c(1:length(SAM))#
+		SAM=matrix(sorted,ncol=1)#
+		print(SAM)#
+			print("Max of SAM:")#
+		print(maxSAM)#
+		print("Number of species:")#
+		print(length(SAM))#
+		print("Number of individuals:")#
+		print(sum(SAM[,1]))	#
+		print('Theta=')#
+		print(theta)#
+		print("time=")#
+		print(time)#
+		#Plots#
+		par(mfrow=c(2,1))#
+		plot(rank,log10(as.vector(SAM)),main="Rank-abundance")#
+		bins=seq(1:maxSAM,by=1)#
+		hist(SAM,breaks=bins,main="Species abundance distribution")
+source("dynamics.Functions.R")
+Dynamics	#
+#
+coalescence <- function(metaPop,sp_rate){		#Calculate initial Metacommunity configuration	#
+	metaMat=matrix(nrow=metaPop,ncol=1)#
+	metaMat[,1]=0#
+	Patches=matrix(nrow=metaPop,ncol=1)#
+	Patches[,1]=1#
+	uniqSp=0		#
+	#Metacommunity (coalescence)#
+	#Assume an event will occur#
+	#Determine which event (death or speciation) and to which individual it occurs#
+	#determine the amount of time that has passed#
+	while (length(which(Patches==0))<metaPop-1) {							#
+		#decide where last event occurred#
+		j=sample(which(Patches>0),1)#
+		randy=runif(1)#
+		if(randy<sp_rate){#
+			uniqSp=uniqSp+1#
+			metaMat[uniqSp,1]=Patches[j,1]#
+			Patches[j,1]=0#
+			}#
+		else if(randy>sp_rate){#
+			parent=sample(length(Patches),1)#
+			if(Patches[parent,1]==0){#
+				Patches[parent,1]=Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+			else if(Patches[parent,1]!=0){#
+				Patches[parent,1]=Patches[parent,1]+Patches[j,1]#
+				Patches[j,1]=0#
+				}#
+		}#
+	}	#
+	metaMat[uniqSp+1,1]=metaPop-sum(metaMat[,1])#
+	vals=metaMat[-which(metaMat==0)]#
+	ordered=sort(vals,decreasing=TRUE)#
+	metaMat=matrix(ordered,ncol=1)#
+	return(metaMat)#
+}#
+#
+initLoc<-function(loc_size,metaMat){#
+	loc_div=length(metaMat)#
+	locMat=matrix(nrow=loc_div,ncol=1)#
+	for(i in 1:(length(locMat))){#
+		locMat[i,1]=1#
+	}#
+	return(locMat)#
+}#
+metaDeath <- function(metaMat)	{#
+	randy=runif(1)#
+	cummet=apply(metaMat/sum(metaMat[,1]),2,cumsum)#
+	for(j in 1:length(metaMat)){#
+		if(randy<cummet[j,1]){#
+			metaMat[j,1]=metaMat[j,1]-1#
+			if(metaMat[j,1]==0){#
+				vals=metaMat[-j,]#
+				metaMat=matrix(vals,ncol=1)#
+			}#
+			break#
+		}#
+	}#
+	return(metaMat)#
+}#
+#
+metaReplacement <- function(metaMat,sp_rate){#
+	randy=runif(1)#
+	randy2=runif(1)#
+	cummet=apply(metaMat/sum(metaMat),2,cumsum)#
+	if (randy>sp_rate){#
+		for(j in 1:length(metaMat)){#
+			if(randy2<cummet[j,1]){#
+				metaMat[j,1]=metaMat[j,1]+1#
+				break#
+			}#
+		}#
+	}#
+	else if(randy<sp_rate){#
+		metaMat=rbind(metaMat,1)#
+	}#
+	return(metaMat)#
+}#
+#
+metaMig<-function(metaMat,locMat){#
+	rand=runif(1)#
+	novSp=length(metaMat)-(length(locMat)-1)#
+	newMig=matrix(nrow=novSp,ncol=1)#
+	k=(length(locMat)-1)#
+	for(j in 1:length(newMig)){#
+		newMig[j,1]=metaMat[j+k,1]#
+		}	#
+	cummig=apply(newMig/sum(newMig),2,cumsum)#
+	for(j in 1:novSp){#
+		if(rand<cummig[j,1]){#
+			swap=metaMat[length(locMat),1]#
+			metaMat[length(locMat),1]=metaMat[j+k,1]#
+			metaMat[j+k,1]=swap#
+			break#
+			}#
+		}#
+	return(metaMat)	#
+}#
+#
+metaTrack<-function(metaMat,locMat,rand_num){#
+	cumloc=apply(locMat/sum(locMat),2,cumsum)#
+	for(j in 1:length(locMat)){#
+		if(randy<cumloc[j]){#
+			temp=metaMat[j,1]#
+			metaMat=metaMat[-j,]#
+			metaMat=matrix(metaMat,ncol=1)#
+			metaMat=rbind(metaMat,temp)#
+			metaMat=matrix(metaMat,ncol=1)#
+			break#
+		}#
+	}#
+	return(metaMat)#
+}#
+#
+localDeath <- function(locMat,rand_num){#
+	randy=rand_num#
+	cumloc=apply(locMat/sum(locMat),2,cumsum)#
+	for(j in 1:length(locMat)){#
+		if(randy<cumloc[j]){#
+			locMat[j,1]=locMat[j,1]-1#
+			if(locMat[j,1]==0){#
+				vals=locMat[-j,]#
+				locMat=matrix(vals,ncol=1)#
+			}#
+			break#
+		}#
+	}#
+	return(locMat)#
+}#
+#
+localReplacement <- function(locMat,metaMat,mig_rate){#
+	randy=runif(1)#
+	randy2=runif(1)#
+	randy3=runif(1)#
+	randy4=runif(1)#
+	cumloc=apply(locMat/sum(locMat),2,cumsum)#
+	cummet=apply(metaMat/sum(metaMat),2,cumsum)#
+	if(randy<mig_rate){#
+		if(randy2<cummet[length(locMat),1]){		#migrating species already present#
+			for(j in 1:length(locMat)){#
+				if(randy2<cummet[j,1]){#
+					locMat[j,1]=locMat[j,1]+1#
+					break#
+				}#
+			}#
+		}#
+		else if(randy2>cummet[length(locMat),1]){#
+			locMat=rbind(locMat,1)#
+		}#
+	}#
+	else if(randy>mig_rate){#
+		for(i in 1:length(locMat)){#
+			if(randy4<cumloc[i]){#
+				locMat[i,1]=locMat[i,1]+1#
+				break#
+			}#
+		}#
+	}#
+	return(locMat)#
+}
+coalescence(1000000,.01)
+ptm=proc.time()
+mill=coalescence(1000000,.01)
+x.vec=sort(runif(100))		#Initialize our grid of points as specified#
+x.vec[1]=0					#x1=0, xd=1, and all xi are in [0,1]#
+x.vec[length(x.vec)]=1#
+n.vec=c(1,10,100)#
+Bn=rep(0,length(x.vec))#
+#
+f<-function(x){#
+	#Requires: 0<=x<=1#
+	#Effects: calculates the magnitude of sin(2pi*x)#
+	result=abs(sin(2*pi*x))#
+	return(result)#
+}#
+#
+for(i in 1:length(n.vec))#
+#Professor Atchade said we could loop through n-values, one FOR loop for the calculation of Bn#
+{#
+	n=n.vec[i]#
+	Bn=rep(0,length(x.vec))#
+	for(j in 1:length(x.vec))#
+	{#
+		x=x.vec[j]#
+		k=0#
+		while(k<=n)#
+		{#
+			Bn[j]=Bn[j]+f(k/n)*choose(n,k)*(x^k)*((1-x)^(n-k))#
+			k=k+1#
+		}#
+	}#
+	assign(paste("B",n,sep=""),round(Bn,digits=6))#
+	#assigns Bn to a vector variable using n in the name (i.e. B1,B10, or B100)#
+	#Since R rounds pi to 3.141593, we similarly round our results#
+}
+x.vec
+B1
+B10
+B100
+plot(f,main="Plot of f and Bn for n=1,10,100",xlab="X",ylab="f(X)")#
+points(x.vec,B1,col="red",pch=19)#
+lines(x.vec,B1,col="red")#
+points(x.vec,B10,col="green",pch=19)#
+lines(x.vec,B10,col="green")#
+points(x.vec,B100,col="blue",pch=19)#
+lines(x.vec,B100,col="blue")#
+legend(.4,1,c("n=1","n=10","n=100"),lty=c(1,1,1),lwd=c(1,1,1),col=c("red","green","blue"))
+degrees=c(16,17,10,26,13,14,28,45,10,12,12,10,136,16,25,36,12,14,22,10)#
+summation=0#
+for(i in 1:length(degrees))#
+{#
+	summation = summation +ln(degrees[i]/9.5)#
+}#
+alpha=21*summation^(-1)
+help(log)
+degrees=c(16,17,10,26,13,14,28,45,10,12,12,10,136,16,25,36,12,14,22,10)#
+summation=0#
+for(i in 1:length(degrees))#
+{#
+	summation = summation + log(degrees[i]/9.5)#
+}#
+alpha=21*summation^(-1)
+alpha
+(alpha-1)/sqrt(20)
+z1 = vector('character')
+z1
+z2=ull
+z2=null
+z2=NULL
+y=1/0
+y
+y-y
+z3 = c(1,3,NA,23,NaN,4)
+is.na(z3)
+is.nan(z3)
+u=is.na(z3)
+z3[!u]
+m=matrix(23,2)
+dim(m)
+m
+B=solve(m)
+m=(23,2,2)
+m=matrix(23,2,2)
+m
+B=solve(m)
+m[,2]=1
+m
+B=solve(m)
+m[1,1]=7
+B=solve(m)
+B
+m = matrix(c(1,2),ncol=2)
+layout(m)
+layout.show(2)
+dnorm(3)
+dnorm(1)
+dnorm(0)
+dnorm(-1)
+pnorm(1)
+pnorm(-1)
+qnorm(.5)
+qnorm(.84)
+qnorm(.75)
+qnorm(.1)
+qnorm(.9)
+rnorm(0,1)
+rnorm(1,0,1)
+dnorm(-1.22)
+x
+X
+X=c(1:5)
+Y=c(1:5)
+X/Y
+Y=c(1:10)
+X/Y
+Y/X
+sample(2,1)
+sample(6,2)
+random.graph = function(n, m){#
+	adj.matrix = matrix(0,nrow = n, ncol = n)#
+	while(m>0){#
+		nodes = sample(n,2)#
+		m = m-1#
+		adj.matrix[nodes[1],nodes[2]] = adj.matrix[nodes[1], nodes[2]] + 1#
+		adj.matrix[nodes[2], nodes[1]] = adj.matrix[nodes[2], nodes[1]] + 1#
+	}#
+}
+random.graph(10,10)
+random.graph = function(n, m){#
+	adj.matrix = matrix(0,nrow = n, ncol = n)#
+	while(m>0){#
+		nodes = sample(n,2)#
+		m = m-1#
+		adj.matrix[nodes[1],nodes[2]] = adj.matrix[nodes[1], nodes[2]] + 1#
+		adj.matrix[nodes[2], nodes[1]] = adj.matrix[nodes[2], nodes[1]] + 1#
+	}#
+	return(adj.matrix)#
+}
+random.graph(10,10)
+system.time(random.graph(1000,100))
+system.time(random.graph(100000,1000))
+random.graph = function(n, m){#
+	adj.matrix = data.frame(0,nrow = n, ncol = n)#
+	while(m>0){#
+		nodes = sample(n,2)#
+		m = m-1#
+		adj.matrix[nodes[1],nodes[2]] = adj.matrix[nodes[1], nodes[2]] + 1#
+		adj.matrix[nodes[2], nodes[1]] = adj.matrix[nodes[2], nodes[1]] + 1#
+	}#
+	return(adj.matrix)#
+}
+random.graph(100000,1000)
+random.graph = function(n, m){#
+	adj.matrix = matrix(0,nrow = n, ncol = n)#
+	while(m>0){#
+		nodes = sample(n,2)#
+		m = m-1#
+		adj.matrix[nodes[1],nodes[2]] = adj.matrix[nodes[1], nodes[2]] + 1#
+		adj.matrix[nodes[2], nodes[1]] = adj.matrix[nodes[2], nodes[1]] + 1#
+	}#
+	return(adj.matrix)#
+}
+random.graph(10000,1000)
+m=c(0,1,2,1)
+m = paste(m,0)
+m
+m=c(0,1,2,1)
+m=cat(m,0)
+m
+m=c(0,1,2,1)
+m=c(m,0)
+m
+install.packages("RSQLite", dependecies=T)
+library("RSQLite")
+drv=dbDriver("SQLite")
+conn=dbConnect(drv,"baseball.db")
+nrow(conn)
+conn
+dbListTables(conn)
+dbListFields(conn,"Master")
+sqltext="SELECT Salaries.teamID AS team,Salaries.yearID AS year, sum(salary) AS salariesFROM Salaries WHERE Salaries.yearID>=1980GROUP BY Salaries.teamID, Salaries.yearID"dt6=dbGetQuery(conn,sqltext)plot(dt6[,3]/10000000)
+conn = dbConnect(drv,host='webbapps-db-dev.web.itd.umich.edu',dbname='statapp', user='statapp_ro', password = 'srdb406')
+conn=dbConnect(drv,host=’webapps-db-dev.web.itd.umich.edu’,dbname=’statapp’,user=’statapp_ro’,password=’srdb406’)
+install.packages("RMySQL",dependencies=T)library(’RMySQL’)drv=dbDriver(’MySQL’)conn=dbConnect(drv,host=’webapps-db-dev.web.itd.umich.edu’,dbname=’statapp’,user=’statapp_ro’,password=’srdb406’)
+library('RMySql')
+install.packages("RMySQL",dependencies=T)library(’RMySQL’)drv=dbDriver(’MySQL’)conn=dbConnect(drv,host=’webapps-db-dev.web.itd.umich.edu’,dbname=’statapp’,user=’statapp_ro’,password=’srdb406’)
+First generate datap=0.3;mu0=10;mu1=15;n=100X=numeric(n)for (i in 1:n){   Z=rbinom(1,1,p)   if (Z==1){      X[i]=mu1+rnorm(1)   }else {      X[i]=mu0+rnorm(1)   }}
+p=0.5;mu0=0;mu=1;K=100Res=matrix(NA,nrow=K,ncol=3)for (k in 1:K){   dist=(X-mu0)^2-(X-mu1)^2   R=p/(p+(1-p)*exp(-0.5*dist))   p=mean(R)   mu1=sum(R*X)/sum(R)   mu0=sum((1-R)*X)/sum(1-R)   Res[k,]=c(p,mu0,mu1)}
+par(mfrow=c(1,3))plot(Res[1:20,1],col=’blue’,type=’b’)plot(Res[1:20,2],col=’blue’,type=’b’)plot(Res[1:20,3],col=’blue’,type=’b’)
+par(mfrow=c(1,3))plot(Res[1:20,1],col='blue',type=’b’)plot(Res[1:20,2],col='blue',type=’b’)plot(Res[1:20,3],col='blue',type=’b’)
+par(mfrow=c(1,3))plot(Res[1:20,1],col='blue',type='b')plot(Res[1:20,2],col='blue',type='b')plot(Res[1:20,3],col='blue',type='b')
+First generate datap=0.3;mu0=12;mu1=15;n=100X=numeric(n)for (i in 1:n){   Z=rbinom(1,1,p)   if (Z==1){      X[i]=mu1+rnorm(1)   }else {      X[i]=mu0+rnorm(1)   }}
+par(mfrow=c(1,3))plot(Res[1:20,1],col='blue',type='b')plot(Res[1:20,2],col='blue',type='b')plot(Res[1:20,3],col='blue',type='b')
+theta=1
+rnrorm(theta,1)
+rnorm(theta,1)
+rnorm(1,theta,1)
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}
+X
+sum(X)/100
+pnorm(2)
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(x,y,a){#
+	if(x>y){#
+		return(dnorm(a)/(1-pnorm(a)))#
+	}#
+	else if(x<=y){#
+		return(-dnorm(a)/(pnorm(a)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j],a)#
+	}#
+	Res[k,1] = theta_1#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j],a)#
+	}#
+	Res[k,1] = theta_1#
+}
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j])#
+	}#
+	Res[k,1] = theta_1#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		if(k==1){#
+			next#
+		}#
+		theta_1 = theta_1 + Res[k-1] + H(a-theta,X[j])#
+	}#
+	Res[k,1] = theta_1#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		if(k==1){#
+			next#
+		}#
+		theta_1 = theta_1 + Res[k-1] + H(a-theta,X[j])#
+	}#
+	Res[k,1] = theta_1/n#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 1		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		if(k==1){#
+			next#
+		}#
+		theta_1 = theta_1 + Res[k-1] + H(a-theta,X[j])#
+	}#
+	Res[k,1] = theta_1/n#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 2		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		if(k==1){#
+			next#
+		}#
+		theta_1 = theta_1 + Res[k-1] + H(a-theta,X[j])#
+	}#
+	Res[k,1] = theta_1/n#
+}
+Res
+pnorm(1)
+pnorm(2)
+pnorm(3)
+dnorm(1)
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j])#
+	}#
+	theta = theta_1/n#
+	Res[k,1] = theta_1/n#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j])#
+	}#
+	theta = theta_1/n#
+	Res[k,1] = theta_1/n#
+}
+Res
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j])#
+	}#
+	theta = theta_1/n#
+	Res[k,1] = theta_1/n#
+}#
+#Plot to check convergence#
+plot(Res[1:20,1], col='blue', type='b')
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L, X)
+X
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L, as.matrix(X))
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L, dt = as.matrix(X))
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L, Dt = as.matrix(X))
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L, Dt = X)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+Est = optim(0, L)
+optimize(L)
+optimize(L, -2:3)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(guess, L, X)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(guess, L, Dt = X)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(guess, L, Data = X)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(guess, L, Data = X, a = a)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(0, L, Data = X, a = a)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(result)#
+}#
+#
+guess = c(1,1)#
+Est = optim(1, L, Data = X, a = a)
+help("Brent")
+optimize(L, -2:4, Data=X, a=a)
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = "Brent")
+result
+Compare to optim#
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	print(result)#
+	return(result)#
+}
+L(0,X,a)
+sum(X)
+plot(0:2,L(x,X))
+plot(0:2,L(0:2,X,a))
+plot(-1.1:1.1,L(-1.1:1.1,X,a))
+f = seq(-1:3, by=.1)
+f=seq(0:3, by=.1)
+plot(L)
+plot(L(0:4,X,a))
+pnorm(-2)
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(-result)#
+}#
+#
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = "Brent")
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(-result)#
+}#
+#
+guess = 1#
+Est = optim(guess, L, Data = X, a = a, method = "Brent")
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = c("Brent"))
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = c("Brent"), lower=-10, upper=10)
+Est
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(-result)#
+}#
+#
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = c("Brent"), lower=-10, upper=10)#
+Est$par
+n = 100#
+theta = 1#
+a = 2#
+#
+X = numeric(n)#
+for(i in 1:n){#
+	Z = rnorm(theta,1)#
+	if(Z > a){#
+		X[i] = 1#
+	}#
+	else {#
+		X[i] = 0#
+	}#
+}#
+#
+H <- function(z,x){#
+	if(x == 1){#
+		return(dnorm(z)/(1-pnorm(z)))#
+	}#
+	else if(x==0){#
+		return(-dnorm(z)/(pnorm(z)))#
+	}#
+}#
+#
+Res = matrix(NA, nrow=n, ncol=1)#
+theta = 0		#initial value for theta#
+for(k in 1:n){#
+	theta_1 = 0#
+	for(j in 1:n){#
+		theta_1 = theta_1 + theta + H(a-theta,X[j])#
+	}#
+	theta = theta_1/n#
+	Res[k,1] = theta_1/n#
+}#
+#Plot to check convergence#
+plot(Res[1:20,1], col='blue', type='b')
+Res[100,1]
+L <-function(theta, Data, a){#
+	n = length(Data)#
+	result = pnorm(theta - a)^(sum(Data))*(1-pnorm(theta-a))^(n-sum(Data))#
+	return(-result)#
+}#
+#
+guess = 0#
+Est = optim(guess, L, Data = X, a = a, method = c("Brent"), lower=-10, upper=10)#
+Est$par
+Res
+xo=7#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*e^-t#
+plot([1:15],x1,type='b', col='blue')
+xo=7#
+t=seq(1:15)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*e^-t#
+plot(t,x1,type='b', col='blue')
+xo=7#
+t=seq(1:15)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue')
+xo=7#
+t=seq(1:25)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue')
+xo=7#
+t=seq(1:25)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue')#
+plot(t,x2,type='l', col='red')
+xo=7#
+t=seq(1:25)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue')#
+lines(t,x2, col='red')
+xo=7#
+t=seq(1:10)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue')#
+lines(t,x2, col='red')
+xo=7#
+t=seq(1:10)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',yrange=seq(0,7))#
+lines(t,x2, col='red')
+xo=7#
+t=seq(1:10)#
+x1 = sqrt(1/((2*t+1)/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,8))#
+lines(t,x2, col='red')
+t=seq(1:10)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,8))#
+lines(t,x2, col='red')
+xo=7#
+t=seq(0:10,by = .1)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,8))#
+lines(t,x2, col='red')
+xo=7#
+t=seq(0:10)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,8))#
+lines(t,x2, col='red')
+xo=10#
+t=seq(0:10)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+t=seq(-1:10)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+t=c(0,10)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(c(0,10),x1,type='l', col='blue',ylim=c(0,10))#
+lines(c(0,10),x2, col='red')
+xo=10#
+x1 = sqrt(1/((2*t)+1/100))#
+x2 = 10*exp(-t)#
+plot(c(0,10),x1,type='l', col='blue',ylim=c(0,10))#
+lines(c(0,10),x2, col='red')
+xo=10#
+x1 = sqrt(1/((2*y)+1/100))#
+x2 = 10*exp(-y)#
+plot(c(0,10),x1,type='l', col='blue',ylim=c(0,10))#
+lines(c(0,10),x2, col='red')
+xo=10#
+x1 = sqrt(1/((2*x)+1/100))#
+x2 = 10*exp(-x)#
+plot(c(0,10),x1,type='l', col='blue',ylim=c(0,10))#
+lines(c(0,10),x2, col='red')
+xo=10#
+t=c(0,10)#
+x1 = sqrt(1/((2*t)+1/100))#
+x2 = 10*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/100))#
+x2 = 10*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=5#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/100))#
+x2 = 10*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=5#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')
+xo=10#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')#
+legend(7,9.5,c("-x","-x^3"),lty=c(1,1),col=c("blue","red"))
+xo=10#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10))#
+lines(t,x2, col='red')#
+legend(7,9.5,c("-x^3","-x"),lty=c(1,1),col=c("blue","red"))
+xo=10#
+t=seq(0,10,by=.01)#
+x1 = sqrt(1/((2*t)+1/xo^2))#
+x2 = xo*exp(-t)#
+plot(t,x1,type='l', col='blue',ylim=c(0,10), ylab = "x(t)")#
+lines(t,x2, col='red')#
+legend(7,9.5,c("-x^3","-x"),lty=c(1,1),col=c("blue","red"))
+calcEvenness <- function(mtrx)				#pass it relative abundance vector/matrix#
+{#
+	## Requires: pass it a relative abundance vector/matrix (ie fractions)#
+	## Effects: calculates the 'evenness' of the community distribution#
+	if (min(mtrx) < 0 || sum(mtrx) <= 0)#
+		return('Could not be calculated')#
+	H=0	#
+	for(i in 1:length(mtrx)){#
+		if(mtrx[i,1]==0){#
+			H=H+0#
+			}#
+		else if(mtrx[i,1]!=0){	#
+			h=-mtrx[i,1]*log(mtrx[i,1])#
+			H=H+h#
+			}#
+		}#
+	E=H/log(length(mtrx))#
+	return(H)#
+}
+a=c(.9,.1)
+calcEvenness(a)
+calcEvenness(as.matrix(a))
+calcEvenness(as.matrix(c(.8,.1,.1)))
+a = 7
+b = 8
+a*b
+getwd()
+setwd("/Users/rileyde/Documents/Project_Euler/Problems11-20/")
+list.files()
+bignums <- read.table("bignumbers.txt")
+dim(bignums)
+bignums <- read.table("bignumbers.txt", sep="")
+dim(bignums)
+bignums <- read.table("bignumbers.txt", "")
+bignumsplit <- apply(bignums, 1, strsplit)
+bignums <- read.delim("bignumbers.txt", sep="")
+dim(bignums)
+bignums <- read.table("bignumbers.txt", sep="")
+dim(bignums)
+strsplit(bignums[1,], "")
+strsplit(as.character(bignums[1,]), "")
+bignums[1,]
+singleString <- paste(readLines("bignumbers.txt", collapse = " "))
+singleString <- paste(readLines("bignumbers.txt"), collapse = " ")
+singleString <- paste(readLines("bignumbers.txt"))
+dim(bignumbers)
+dim(bignums)
+bignums[100,]
+bignums <- read.table("bignumbers.txt", sep="", stringsAsFactors = T)
+dim(bignums)
+bignums[1,]
