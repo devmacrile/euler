@@ -17,6 +17,8 @@ though it is known that the greatest number that cannot be expressed as the sum 
 Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 """
 
+#so between 24 and 28123
+#are sums of abundant numbers abundant?
 
 ###library imports
 import time
@@ -36,67 +38,54 @@ def isAbundant(n):
     else:
         return False
 
-print sumOfDivisors(64)
-print isAbundant(64)
 
 
-###variables
-start = time.time()
+#calculate abundant numbers, write them to file
 abundantNumbers = []
-answer = 0
-flag = False
-
-###main calculation
-for i in range(1, 28123+1):
+"""
+for i in range(1, 28124):
     if sumOfDivisors(i) > i:
         abundantNumbers.append(i)
 
-a=False
-# vv is an interesting series; seems like there is some pattern.. plot in R?
-for i in abundantNumbers:
-    a= False
-    if i %2 ==0 and i%3 ==0:
-        a = True
-    print i, " ", a
-    if i > 1000:
-        break
-print len(abundantNumbers)
-
-#NONE!!!! so all abundant numbers are divisible by 2 or 3 (intuitively)
-for i in abundantNumbers:
-    if i%2 != 0 and i%3 != 0:
-        print "Hey! ", i
-
-for i in abundantNumbers:
-    print i
-    if i > 100:
-        break
-
-for i in range(len(abundantNumbers)):
-    print abundantNumbers[i+1] - abundantNumbers[i]
-    if abundantNumbers[i] > 100:
-        break
+f = open("abundants.txt", "w")
+for ab in abundantNumbers:
+    f.write("%s\n" % ab)
+f.close()
 """
-for i in range(1,28123+1):
-    if i < 50 or i%2 == 1:
-        print i
-        for j in abundantNumbers:
-            flag = False
-            if i - j in abundantNumbers:
-                print i, " ", j, " ", i-j
-                flag = True
-                break
-    if not flag:
-        answer += i
-       
+
+##read abundant numbers from file
+with open('abundants.txt') as f:
+    abundantNumbers = f.read().splitlines()
+f.close()
+
+#convert string literals into ints
+for i in range(0, len(abundantNumbers)):
+    abundantNumbers[i] = int(abundantNumbers[i])
+
+
+###let's do this
+start = time.time()
+numAbundants = len(abundantNumbers)
+answer = 0
+limit = 28124
+isSumAbundant = [False for i in range(limit)]
+
+
+for i in range(numAbundants):
+    for j in range(i, numAbundants):
+        if abundantNumbers[i] + abundantNumbers[j] <= limit:
+            isSumAbundant[abundantNumbers[i] + abundantNumbers[j] - 1] = True
+        else:
+            break
+            
+for i in range(len(isSumAbundant)):
+    if not isSumAbundant[i]:
+        answer += i + 1
+
+
 elapsed = time.time() - start        
 print "The solution is %s, found in %s seconds." %(answer, elapsed)
-    
-    
-    """
-    
-    
-    
-    
-    
-    
+
+#The solution is 4179871, found in 6.28140616417 seconds.
+
+
