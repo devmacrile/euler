@@ -12,3 +12,5 @@ The data files I don't have organized by problem for now.  I will update this on
 
 Project Euler: http://projecteuler.net  
 Leonhard Euler: http://en.wikipedia.org/wiki/Leonhard_Euler 
+
+![Euler pic not found!](euler.png)
