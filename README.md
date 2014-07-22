@@ -1,6 +1,8 @@
 Project Euler Solutions
 ==========================
 
+![Euler pic not found!](euler.png)
+
 Herein lies my solutions to Project Euler problems.
 
 The code (mostly Python, for now) is under src, with the files stored in subdirectories created for every bin of 10 problems (i.e. 1-10, 11-20, etc.)
@@ -13,4 +15,3 @@ The data files I don't have organized by problem for now.  I will update this on
 Project Euler: http://projecteuler.net  
 Leonhard Euler: http://en.wikipedia.org/wiki/Leonhard_Euler 
 
-![Euler pic not found!](euler.png)
