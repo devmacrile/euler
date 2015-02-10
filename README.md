@@ -1,17 +1,11 @@
-Project Euler Solutions
+Project Euler
 ==========================
 
 
-Herein lies my solutions to Project Euler problems.
+Some solutions to [Project Euler](http://projecteuler.net) problems.  Goal is to get at least 100.  We'll see.
 
-The code (mostly Python, for now) is under src, with the files stored in subdirectories created for every bin of 10 problems (i.e. 1-10, 11-20, etc.)
+The first 10 problem solutions are under src/ (before I switched to using Python).  The rest of the code is in the python/ directory, the file name containing the problem number.
 
-The code files are named by the problem number: so, *problem1.py*, for example, is the solution for problem 1.  Generally, I have tried to comment the code as well as possible, and include a standard way of printing to stdout at the end of each program.
-
-The data files I don't have organized by problem for now.  I will update this once I get around to it and include information on which code has a dependency on which data file, etc.
-
-
-Project Euler: http://projecteuler.net  
-Leonhard Euler: http://en.wikipedia.org/wiki/Leonhard_Euler 
+The data/ directory contains the input files used (when necessary).  
 
 ![Euler pic not found!](euler.png)
