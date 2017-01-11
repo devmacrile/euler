@@ -1,8 +1,8 @@
-Project Euler
-==========================
+### Project Euler  
+==========================  
 
-Some solutions to [Project Euler](http://projecteuler.net) problems.  Goal is to get at least 100.  We'll see.
+![Euler pic not found!](euler.png)  
 
-The data/ directory contains the input files used (when necessary).  
+Some solutions to [Project Euler](http://projecteuler.net) problems.  
 
-![Euler pic not found!](euler.png)
+Goal is to get at least **100**.
