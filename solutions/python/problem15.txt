@@ -8,17 +8,16 @@ Starting in the top left corner of a 2x2 grid, and only being able to move to th
 How many such routes are there through a 20x20 grid?
 
 
-
 So, this one was done by hand.  Wound up thinking of it as a binomial coefficient problem.  
 Turn the lattice 45 degrees to think of it as a diamond (more natural "flow" down the network).
 Pascal's triangle gives the binomial coefficients.
 
-                       1
-					 1	 1
-					1  2  1
-				   1  3 3  1
-				  1 4  6  4 1
-				 ..............
+                   1
+                 1   1
+               1   2   1
+             1   3   3   1
+            1  4   6   4  1
+            ...............
 				 
 And that center coefficient (i.e. center of even rows, the ones with odd # of values)
 is (2n choose n) where n constitutes the dimensions of the lattice.
