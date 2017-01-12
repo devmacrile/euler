@@ -28,9 +28,8 @@ What is the greatest product of four adjacent numbers in the same direction (up,
 left, right, or diagonally) in the 2020 grid?
 """
 
-import time
+from eutil import clock
 
-start = time.time()
 
 L = []
 L.append("08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08")
@@ -57,34 +56,37 @@ L.append("01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48")
 M = [i.split() for i in L]
 M = [[int(j) for j in i] for i in M]
 
-max_product = 0
+@clock
+def main():
+    max_product = 0
 
-#horizontal products
-for m in range(20):
-    for n in range(16):
-        product = M[m][n]*M[m][n+1]*M[m][n+2]*M[m][n+3]
-        if product>max_product:
-            max_product = product
-            
-#vertical products
-for m in range(16):
-    for n in range(20):
-        product = M[m][n]*M[m+1][n]*M[m+2][n]*M[m+3][n]
-        if product>max_product:
-            max_product = product
+    # horizontal products
+    for m in range(20):
+        for n in range(16):
+            product = M[m][n]*M[m][n+1]*M[m][n+2]*M[m][n+3]
+            if product>max_product:
+                max_product = product
 
-#diagonal products
-for m in range(3,16):
-    for n in range(16):
-        ne = M[m][n]*M[m-1][n+1]*M[m-2][n+2]*M[m-3][n+3]
-        se = M[m][n]*M[m+1][n+1]*M[m+2][n+2]*M[m+3][n+3]
-        nw = M[m][19-n]*M[m-1][19-(n+1)]*M[m-2][19-(n+2)]*M[m-3][19-(n+3)]
-        sw = M[m][19-n]*M[m+1][19-(n+1)]*M[m+2][19-(n+2)]*M[m+3][19-(n+3)]
-        if ne> max_product or se>max_product or nw>max_product or sw>max_product:
-            max_product = max(ne, se, nw, sw)
+    # vertical products
+    for m in range(16):
+        for n in range(20):
+            product = M[m][n]*M[m+1][n]*M[m+2][n]*M[m+3][n]
+            if product>max_product:
+                max_product = product
+
+    # diagonal products
+    for m in range(3,16):
+        for n in range(16):
+            ne = M[m][n]*M[m-1][n+1]*M[m-2][n+2]*M[m-3][n+3]
+            se = M[m][n]*M[m+1][n+1]*M[m+2][n+2]*M[m+3][n+3]
+            nw = M[m][19-n]*M[m-1][19-(n+1)]*M[m-2][19-(n+2)]*M[m-3][19-(n+3)]
+            sw = M[m][19-n]*M[m+1][19-(n+1)]*M[m+2][19-(n+2)]*M[m+3][19-(n+3)]
+            if ne> max_product or se>max_product or nw>max_product or sw>max_product:
+                max_product = max(ne, se, nw, sw)
+
+    return max_product
+
+
+if __name__ == '__main__':
+    main()
     
-print max_product
-        
-elapsed = (time.time() - start)
-print elapsed
-
