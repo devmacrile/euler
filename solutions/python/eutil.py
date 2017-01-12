@@ -78,3 +78,18 @@ def sum_of_divisors(n):
         if (n % i) == 0:
             result += i
     return result
+
+
+def collatz_sequence(n):
+    """
+    Yields (n / 2) if n is even, (3*n + 1) if n is odd
+    while n is greater than 1.
+    """
+    assert n > 0
+    while n > 1:        
+        if (n % 2) == 0:
+            func = lambda n: (n / 2)
+        else:
+            func = lambda n: (3 * n + 1)
+        yield func(n)
+        n = func(n)
