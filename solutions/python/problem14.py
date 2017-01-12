@@ -17,11 +17,13 @@ Which starting number, under one million, produces the longest chain?
 NOTE: Once the chain starts the terms are allowed to go above one million.
 """
 
-from eutil import clock
+from collections import defaultdict
+
+from eutil import clock, collatz_sequence
 
 
 @clock
-def main():
+def brute():
     result = 0
     value = 1000000
     for i in range(1000000):
@@ -37,6 +39,51 @@ def main():
             result = count
             value = i
     return value
+
+
+@clock
+def main(upper_bound=1000000):
+    """
+    Search-space reducing insights:
+       - Solution must be > 500k, else double it and you have a longer sequence.
+       - Solution cannot have come from 3n + 1 operation by same reasoning, so
+         the inverse of this operation must be even for the solution (and thus,
+         would have been cut by two instead by definition).
+       - Many numbers will be part another's sequence, so cache these calculations.
+    """
+    seqlens = defaultdict(lambda: 0)
+    even_inverse = lambda x: ((float(x - 1) / 3) % 2) == 0.0
+    candidates = [x for x in range(upper_bound // 2, upper_bound) if even_inverse(x)]
+    for candidate in candidates:
+        num = candidate
+        while num > 1:
+            seqlens[candidate] += 1
+            if num % 2 == 0:
+                num = num / 2
+            else:
+                num = 3 * num + 1
+            if num in seqlens:
+                seqlens[candidate] += seqlens[num]
+                break
+    answer = max([k for k in seqlens], key=(lambda key: seqlens[key]))
+    return answer, seqlens[answer]
+
+
+def plot_solution_sequence():
+    import matplotlib.pyplot as plt
+    solution, length = main()
+    plt.plot(range(length), list(collatz_sequence(solution)), label='start = %s' % str(solution))
+    plt.title('Longest Collatz Sequence (n < 1000000)')
+    plt.xlabel('Iteration')
+    plt.ylabel('Sequence value')
+    plt.legend(loc='upper right')
+    plt.show()
+    
         
 if __name__ == '__main__':
+    #brute()  # for performance comparison
     main()
+
+    # Plot is kind of cool, showing the sequence
+    # to be a kind of temporal fractal
+    plot_solution_sequence()
