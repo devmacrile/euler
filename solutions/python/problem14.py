@@ -17,6 +17,7 @@ Which starting number, under one million, produces the longest chain?
 NOTE: Once the chain starts the terms are allowed to go above one million.
 """
 
+import operator
 from collections import defaultdict
 
 from eutil import clock, collatz_sequence
@@ -50,16 +51,19 @@ def main(upper_bound=1000000):
          the inverse of this operation must be even for the solution (and thus,
          would have been cut by two instead by definition).
        - Many numbers will be part another's sequence, so cache these calculations.
+
+    TODO: Turns out, the 500k+ 'optimization' slows things down ~2x.  Must be the 
+    interaction with the cached results, but would be interesting to figure this out.
     """
     seqlens = defaultdict(lambda: 0)
     even_inverse = lambda x: ((float(x - 1) / 3) % 2) == 0.0
-    candidates = [x for x in range(upper_bound // 2, upper_bound) if even_inverse(x)]
+    candidates = [x for x in range(1, upper_bound, 2) if even_inverse(x)]
     for candidate in candidates:
         num = candidate
         while num > 1:
             seqlens[candidate] += 1
             if num % 2 == 0:
-                num = num / 2
+                num = num // 2
             else:
                 num = 3 * num + 1
             if num in seqlens:
