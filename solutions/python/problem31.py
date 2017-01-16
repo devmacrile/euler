@@ -9,12 +9,13 @@ It is possible to make £2 in the following way:
 How many different ways can £2 be made using any number of coins?
 """
 
-from eutil import clock
+from eutil import clock, memoize
 
 def next_denomination(n):
     denoms = {200: 100, 100: 50, 50:20, 20:10, 10:5, 5:2, 2:1}
     return denoms[n]
 
+@memoize
 def count_partitions(amount, max_denomination):
     if amount < 5 or max_denomination <= 1:
         return 1
