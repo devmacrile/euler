@@ -51,14 +51,13 @@ def sieve(n):
     """
     Generator to return primes using the sieve of eratosthenes.
     """
-    ints = [True] * n
+    ints = [True] * (n - 1)
     ints[0] = ints[1] = False	
     for (i, isprime) in enumerate(ints):
         if isprime:
             yield i
-            for n in xrange(i*i, n, i):
-                ints[n] = False
-
+            for j in xrange(i*i, n - 1, i):
+                ints[j] = False
 
 def primes(n):
     """
