@@ -14,13 +14,14 @@ from collections import Counter
 from eutil import clock
 
 
-digits = ''.join(map(str, range(10)))
+max_digit = {2: 5, 3: 7, 4: 8, 5: 9}
 factorials = map(math.factorial, range(0, 10))
 
 @clock
 def faster():
     result = 0
     for i in range(2, 6):
+        digits = ''.join(map(str, range(max_digit.get(i, 10))))
         for j in itertools.combinations_with_replacement(digits, i):
             sum_digit_factorials = sum([factorials[int(x)] for x in j])
             if Counter(j) == Counter([x for x in str(sum_digit_factorials)]):
