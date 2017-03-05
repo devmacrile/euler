@@ -67,6 +67,16 @@ def primes(n):
     return list(pgen)
 
 
+def is_prime(n):
+    if n < 2:
+        return False
+    limit = int(math.sqrt(n)) + 1
+    for x in range(2, limit):
+        if n % x == 0:
+            return False
+    return True
+
+
 @memoize
 def sum_of_divisors(n):
     """
