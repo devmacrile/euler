@@ -36,7 +36,6 @@ def main():
             continue
         if truncatable(prime):
             truncatables.append(prime)
-    print truncatables
     return sum(truncatables)
 
 
