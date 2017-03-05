@@ -13,29 +13,31 @@ NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
 
 from eutil import clock, sieve, is_prime
 
+primes = set(sieve(1000000))  # trial and error
+
 def truncatable(n):
     return left_truncatable(n) and right_truncatable(n)
 
 def left_truncatable(n):
     if n // 10 == 0:
-        return is_prime(n)
-    return is_prime(n) and left_truncatable(int(str(n)[1:]))
+        return n in primes
+    return n in primes and left_truncatable(int(str(n)[1:]))
 
 def right_truncatable(n):
     if n // 10 == 0:
-        return is_prime(n)
-    return is_prime(n) and right_truncatable(int(str(n)[:-1]))
+        return n in primes
+    return n in primes and right_truncatable(int(str(n)[:-1]))
 
 @clock
 def main():
     truncatables = []
-    prime_gen = sieve(10000000)  # arbitarily high
-    while len(truncatables) < 11:
-        prime = next(prime_gen)
+    for prime in primes:
         if prime < 10:
             continue
         if truncatable(prime):
             truncatables.append(prime)
+        if len(truncatables) == 11:
+            break
     return sum(truncatables)
 
 
