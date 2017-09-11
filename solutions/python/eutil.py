@@ -4,6 +4,7 @@ A collection of utility functions used by python solutions in this directory.
 
 import time
 import functools
+import random
 import math
 
 
@@ -67,6 +68,7 @@ def primes(n):
     return list(pgen)
 
 
+@memoize
 def is_prime(n):
     if n < 2:
         return False
@@ -74,6 +76,56 @@ def is_prime(n):
     for x in range(2, limit):
         if n % x == 0:
             return False
+    return True
+
+
+def miller_rabin_test(n, k):
+    """
+    Implementation of the Miller-Rabin primality test.
+    https://en.wikipedia.org/wiki/Miller-Rabin_primality_test
+
+    Arguments:
+        n -- some odd integer, >3 to be tested for primality
+        k -- trial parameter, determines accuracy of test
+
+    Returns 'True' if n is probably prime, 'False' if it is composite.
+    """
+    assert n > 1
+
+    if n == 2 or n == 3:
+        return True
+
+    # check for odds
+    if n % 2 == 0:
+        return False
+
+    d = n - 1
+    r = 0
+    while d % 2 == 0:
+        d //= 2
+        r += 1
+
+    assert pow(2, r) * d == (n - 1)
+
+    for i in xrange(k):
+        a = random.randint(2, n-2)
+        x = pow(a, d, n)
+
+        if x == 1 or x == (n - 1):
+            continue
+
+        for j in xrange(r - 1):
+            x = pow(x, 2, n)
+            if x == 1:
+                return False
+            elif x == n - 1:
+                break
+
+            # if we finished inner-loop and did not hit 
+            # condition, then composite
+            if j == (r - 2):
+                return False
+
     return True
 
 
