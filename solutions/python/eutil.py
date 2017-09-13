@@ -60,6 +60,17 @@ def sieve(n):
             for j in xrange(i*i, n - 1, i):
                 ints[j] = False
 
+
+def prime_index(n):
+    ints = [True] * (n - 1)
+    ints[0] = ints[1] = False
+    for (i, isprime) in enumerate(ints):
+        if isprime:
+            for j in xrange(i * i, n - 1, i):
+                ints[j] = False
+    return ints
+    
+
 def primes(n):
     """
     Return a list of primes less than n.
