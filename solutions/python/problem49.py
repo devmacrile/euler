@@ -13,28 +13,26 @@ What 12-digit number do you form by concatenating the three terms in this sequen
 """
 
 import itertools
-import collections
 
 from eutil import clock, primes
 
 
+def is_permutation(x, y):
+    return sorted(str(x)) == sorted(str(y))
+
+
 @clock
 def main():
-    seen = [1487, 4817, 8147]
-    pset = set(primes(10000))
-    for p in pset:
-        if p < 1000 or '0' in str(p):# or p in seen :
+    diff = 3330
+    seen = set([1487, 4817, 8147])
+    primeset = set(primes(10000))
+    for p in primes(10000):
+        if (p < (1000 + diff)) or ('0' in str(p)) or (p in seen):
             continue
-        perms = set([int(''.join(perm)) for perm in itertools.permutations(str(p), 4)])
-        are_prime = [perm in pset for perm in perms]
-        if p == 1487:
-            print('-------- WOOOOOO \n\n')
-            print(collections.Counter(are_prime)[True])
-
-        if collections.Counter(are_prime)[True] >= 3:
-            print(are_prime)
-            print(p, sorted([p for i, p in enumerate(perms) if are_prime[i] is True]))
-            #return ''.join(sorted([str(p) for i, p in enumerate(perms) if are_prime[i]]))
+        if (p - diff) in primeset and (p + diff) in primeset:
+            if is_permutation(p, p - diff) and is_permutation(p, p + diff):
+                return ''.join(map(str, [p - diff, p, p + diff]))
+    return None
 
 
 if __name__ == '__main__':
