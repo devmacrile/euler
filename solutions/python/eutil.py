@@ -4,6 +4,7 @@ A collection of utility functions used by python solutions in this directory.
 
 import time
 import functools
+import fractions
 import random
 import math
 
@@ -61,6 +62,24 @@ def sieve(n):
                 ints[j] = False
 
 
+def distinct_prime_factors(n):
+    """
+    Uses a variation on the Sieve of Eratosthenes to generate
+    the number of distinct prime factors for each integer
+    up to input n.  Returns a list of these counts where the
+    list index is equivalent to the integer.
+    """
+    counts = [0] * (n - 1)
+    ints = [True] * (n - 1)
+    ints[0] = ints[1] = False
+    for (i, isprime) in enumerate(ints):
+        if isprime:
+            for j in xrange(i, n - 1, i):
+                ints[j] = False
+                counts[j] += 1
+    return counts
+
+
 def prime_index(n):
     ints = [True] * (n - 1)
     ints[0] = ints[1] = False
@@ -88,6 +107,18 @@ def is_prime(n):
         if n % x == 0:
             return False
     return True
+
+
+def coprime(a, b):
+    return fractions.gcd(a, b) == 1
+
+
+def omega(n):
+    """
+    Computes (probabilistically) the number of 
+    prime factors of integer n.
+    """
+    return int(round(math.log(math.log(n))))
 
 
 def miller_rabin_test(n, k):
