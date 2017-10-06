@@ -35,7 +35,7 @@ from eutil import clock, primes, is_prime
 
 @clock
 def main():
-    n = 10
+    n = 1000000
     primelist = primes(5000)
     longest = []
     for i in range(len(primelist)):
