@@ -42,15 +42,11 @@
 
 (define primes (sieve (integers-starting-from 2)))
 
-
 (define (make-merge stream-exp-a stream-exp-b)
     (list `merge stream-exp-a stream-exp-b))
 
 (define (make-scale-stream stream-var factor)
     (list `scale-stream stream-var factor))
-
-(display (make-scale-stream `S 5))
-(display (make-merge (make-scale-stream `S 2) (make-scale-stream `S 3)))
 
 (define (prime-merge-expression stream-var n)
     (define (iter k exp)
@@ -60,11 +56,6 @@
                 (iter (+ k 1) (make-merge exp (make-scale-stream stream-var p))))))
     (iter 1 (make-scale-stream stream-var 2)))
 
-(eval (list `define `s 
-        (list `cons-stream 1 (prime-merge-expression `s 100)))
-        user-initial-environment)
-
-
 (define (stream-values-under stream upper-bound)
     (define (iter stream count)
         (let ((next (stream-car stream)))
@@ -72,6 +63,13 @@
                 count
                 (iter (stream-cdr stream) (+ count 1)))))
     (iter stream 0))
+
+
+; define our stream of generalized Hamming numbers
+; recursively by merging streams scaled by each prime under 100
+(eval (list `define `s 
+        (list `cons-stream 1 (prime-merge-expression `s 100)))
+        user-initial-environment)
 
 (stream-values-under s 1000000000)
 ;Value: 2944730
