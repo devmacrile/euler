@@ -196,3 +196,10 @@ def collatz_sequence(n):
             func = lambda n: (3 * n + 1)
         yield func(n)
         n = func(n)
+
+
+def continued_fraction(numfunc, denfunc, k):
+    if k == 0:
+        return numfunc(k) / denfunc(k)
+    else:
+        return numfunc(k) / (denfunc(k) + continued_fraction(numfunc, denfunc, k - 1))
